@@ -42,6 +42,7 @@ This project was brewed by:
  - **Concrete Builder2**: `DessertGiftBoxBuilder` -  
 
   #### _Structure of the design pattern_
+<img width="2588" height="1736" alt="Builder-CozyCafe" src="https://github.com/user-attachments/assets/5a77b5cd-a9b6-4f9c-8b21-5bc4734e4391" />
 
 ---
   
