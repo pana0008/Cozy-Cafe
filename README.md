@@ -23,7 +23,7 @@ This project was brewed by:
   
   This way, all parts of the program work with a consistent, centralized menu - the list of drinks, pastries and addons remains the same everywhere in the application and all orders share the same menu. The class includes the private fields `drinkMenu`, `pastryMenu` and `addonMenu`, which are maps of drink, pastry and add-on options that the customer can choose from. Getters (`getDrinkMenu`, `getPastryMenu`, `getAddonMenu`) are implemented for each map in order to provide controlled access to the menu items (Encapsulation).
   
- - **Client**: `Order Manager` - uses the singleton instance
+ - **Client**: `OrderManager` - uses the singleton instance
  - **Singleton**: `CafeMenu` - the centralized menu
 
   #### _Structure of the design pattern_
@@ -96,7 +96,7 @@ public class CafeMenu {
   #### _Description_
   The Builder design pattern allows us to construct complex objects - in our case - `GiftBox` objects. The pattern was used to create different variations of gift boxes (_Dessert box_ and _Healthy Box_), using the same construction steps - `reset()`, `addDrink()`, `addPastry()` and `getResult()`. The `BoxBuilder` interface defines these construction steps and the two concrete builders `HealthyGiftBoxBuilder` and `DessertGiftBoxBuilder` implement the steps for different types of boxes. The `OrderManager` class uses the director and the builder to create a `GiftBox` object. The `Baker` class acts as a Director - it defines the order in which to execute the building steps. This way, we can create different gift box variations.
   
- - **Client**: `Order Manager` - associates one of the Builder object with the Director
+ - **Client**: `OrderManager` - associates one of the Builder object with the Director
  - **Builder interface**: `BoxBuilder` - declares box construction steps that are common to all types of builders
  - **Concrete Builder1**: `HealthyGiftBoxBuilder` - implements the construction steps to create a healthy gift box (includes Tea and Blueberry Oat Muffin)
  - **Concrete Builder2**: `DessertGiftBoxBuilder` -  implements the construction steps to create a dessert gift box (includes Hot Chocolate and Cinnamon Roll)
@@ -179,7 +179,7 @@ public class HealthyGiftBoxBuilder implements BoxBuilder{
   
 The `AddOnDecorator` class is the Base Decorator - it has a field for referencing a wrapped object of type `MenuItem`. This Base Decorator delegates all operations to the wrapped object. We created four Concrete Decorators - `Caramel Syrup`, `ExtraShot`, `OatMilk` and `WhippedCream`. They override the methods of the Base Decorator (`AddOnDecorator`) in order to add their own behavior (modifying the description and price). This way, the customer can order drinks with different combinations of add-ons, wihtout creating a separate class for each combination.
 
- - **Client**: `Order Manager` - applies decorators to `MenuItem` objects based on the customer choices
+ - **Client**: `OrderManager` - applies decorators to `MenuItem` objects based on the customer choices
  - **Component interface**: `MenuItem` - declares the common interface for both wrappers and wrapped objects
  - **Concrete Components**: `BananaSmoothie`, `Tea`, `HotChocolate`, `Cappuccino`, `Latte` - drink objects that implement `MenuItem` and can be wrapped by the decorators
  - **Base Decorator**: `AddOnDecorator` - provides the base functionality for all add-on decorators
@@ -273,11 +273,87 @@ public class HotChocolate implements MenuItem {
 ### 2. Composite
 
   #### _Description_
+ In this project, both individual menu items (drinks and pastries) and composite objects (`GiftBox`) implement the `MenuItem` interface. This allows us to work with an item or a gift box including multiple items using the same operations (`getDescription()` and `getPrice()`). The `GiftBox` class acts as a Composite that groups menu items together. All drinks and pastries (`BananaSmoothie`, `Tea`, `HotChocolate`, `Cappuccino`, `Latte`, `BananaBread`, `CinnamonRoll`, `Banitsa`, `BlueberryOatMuffin` and `Croissant`) act as leaves. The main benefit of this approach is that we don't need to care about the concrete classes of objects that compose the tree. We don't need to know whether an object is a simple menu item or a complex gift box - we treat them all the same through the common interface. When we call a method, the objects themselves pass the request down the tree.
+
+ - **Client**: `OrderManager` - creates and works with individual menu items and composite gift boxes; interacts with all elements through the component interface
+ - **Component interface**: `MenuItem` - describes operations that are common to both simple (the leaves) and complex elements (the composite gift boxes) of the tree
+ - **Composite**: `GiftBox` - the element that has sub-elements (leaves); groups multiple `MenuItem` objects
+ - **Leaves**: `BananaSmoothie`, `Tea`, `HotChocolate`, `Cappuccino`, `Latte`, `BananaBread`, `CinnamonRoll`, `Banitsa`, `BlueberryOatMuffin`, `Croissant` - individual menu items that have no sub-elements; basic elements of the tree
 
   #### _Structure of the design pattern_
   <img width="4838" height="1841" alt="Composite-CozyCafe" src="https://github.com/user-attachments/assets/2d7b46dc-daa4-468d-9c16-a64509db63c3" />
 
   #### _Implementation_
+  ##### Component interface - MenuItem interface
+  ```java
+package cafe.core;
+
+public interface MenuItem {
+    String getDescription();
+    double getPrice();
+}
+  ```
+##### Composite - GiftBox
+  ```java
+package cafe.boxes;
+
+import cafe.core.MenuItem;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GiftBox implements MenuItem {
+    private List<MenuItem> items = new ArrayList<>();
+
+    public void addItem(MenuItem item) {
+        items.add(item);
+    }
+
+    @Override
+    public String getDescription() {
+        StringBuilder sb = new StringBuilder("GiftBox:\n");
+
+        for (MenuItem item : items) {
+            sb.append(" - ").append(item.getDescription()).append("\n");
+        }
+
+        if (!items.isEmpty()) {
+            sb.setLength(sb.length() - 1);
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public double getPrice() {
+        double total = 0;
+        for (MenuItem item : items) {
+            total += item.getPrice();
+        }
+        return total;
+    }
+}
+  ```
+##### One of the leaves - Cappuccino
+  ```java
+package cafe.drinks;
+
+import cafe.core.MenuItem;
+
+public class Cappuccino implements MenuItem {
+    @Override
+    public String getDescription() {
+        return "Cappuccino";
+    }
+
+    @Override
+    public double getPrice() {
+        return 3.00;
+    }
+  ```
+
+  ---
+  
 ### Behavioral Design Patterns
 ### 1. Strategy
 
