@@ -11,7 +11,7 @@ public class GiftBox {
     }
 
     public String getContents() {
-        StringBuilder sb = new StringBuilder("Contains:\n");
+        StringBuilder sb = new StringBuilder("This gift box contains:\n");
         for (String item : items) {
             sb.append(" - ").append(item).append("\n");
         }
