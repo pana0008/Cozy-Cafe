@@ -1,12 +1,14 @@
 package cafe.core;
 
+import cafe.discount.*;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         OrderManager orderManager = new OrderManager();
         Basket basket = new Basket();
+        Checkout checkout = new Checkout();
         Scanner sc = new Scanner(System.in);
 
         System.out.println("=== WELCOME TO THE COZY CAFE! ===");
@@ -18,11 +20,9 @@ public class Main {
             System.out.println("2) Order Gift Box");
             System.out.println("3) Checkout and Pay");
             System.out.print("Choice: ");
-
             String choice = sc.nextLine();
 
             switch (choice) {
-
                 case "1" -> {
                     MenuItem item = orderManager.selectItem();
                     if (item != null) {
@@ -40,23 +40,29 @@ public class Main {
                 }
 
                 case "3" -> {
+                    System.out.println("\nAre you a student, senior, or none of these? (Enter s for student, r for senior, n for none):");
+                    String discountType = sc.nextLine().toLowerCase();
+
+                    switch (discountType) {
+                        case "s", "student" -> checkout.setDiscountCalculator(new StudentDiscountCalculator());
+                        case "r", "senior"  -> checkout.setDiscountCalculator(new SeniorDiscountCalculator());
+                        default -> checkout.setDiscountCalculator(new NullDiscountCalculator());
+                    }
                     break mainLoop;
                 }
-
                 default -> System.out.println("Invalid option. Please enter 1, 2, or 3.");
             }
         }
 
         System.out.println("\n=== RECEIPT ===");
-
         if (basket.getTotalAmount() == 0) {
             System.out.println("Your basket is empty.");
         } else {
             System.out.println("Amount of ordered items: " + basket.getTotalAmount());
             System.out.println("Items ordered:\n" + basket.getItemsDescription());
-            System.out.printf("TOTAL: $%.2f%n", basket.getTotalPrice());
+            double totalAfterDiscount = checkout.calculateTotal(basket);
+            System.out.printf("TOTAL: $%.2f%n", totalAfterDiscount);
         }
-
         System.out.println("\nThank you for visiting the Cozy Cafe!");
         sc.close();
     }
