@@ -137,7 +137,7 @@ public class Baker {
 }
   ```
 
- ##### One concrete builder - HealthyGiftBoxBuilder
+ ##### One of the Concrete Builders - HealthyGiftBoxBuilder
   
   ```java
 package cafe.boxes;
@@ -171,15 +171,105 @@ public class HealthyGiftBoxBuilder implements BoxBuilder{
 ```
 ---
   
-### Structural Design Patterns
+### _Structural Design Patterns_
 ### 1. Decorator
 
   #### _Description_
+  The Decorator design pattern lets us wrap a base object with additional behavior. All the classes `BananaSmoothie`, `Tea`, `HotChocolate`, `Cappuccino` and `Latte` are Concrete Components that implement the Component interface (in our case, the `MenuItem` interface). These are the classes of objects being wrapped by the decorators. 
+  
+The `AddOnDecorator` class is the Base Decorator - it has a field for referencing a wrapped object of type `MenuItem`. This Base Decorator delegates all operations to the wrapped object. We created four Concrete Decorators - `Caramel Syrup`, `ExtraShot`, `OatMilk` and `WhippedCream`. They override the methods of the Base Decorator (`AddOnDecorator`) in order to add their own behavior (modifying the description and price). This way, the customer can order drinks with different combinations of add-ons, wihtout creating a separate class for each combination.
 
+ - **Client**: `Order Manager` - applies decorators to `MenuItem` objects based on the customer choices
+ - **Component interface**: `MenuItem` - declares the common interface for both wrappers and wrapped objects
+ - **Concrete Components**: `BananaSmoothie`, `Tea`, `HotChocolate`, `Cappuccino`, `Latte` - drink objects that implement `MenuItem` and can be wrapped by the decorators
+ - **Base Decorator**: `AddOnDecorator` - provides the base functionality for all add-on decorators
+ - **Concrete Decorators**: `Caramel Syrup`, `ExtraShot`, `OatMilk`, `WhippedCream` - add extra description and cost to a drink
+  
   #### _Structure of the design pattern_
 <img width="6221" height="2629" alt="Decorator-CozyCafe" src="https://github.com/user-attachments/assets/e0d38ef6-9fcb-48ef-87b1-b9731528b5e0" />
 
   #### _Implementation_
+  ##### Component interface - MenuItem interface
+  ```java
+package cafe.core;
+
+public interface MenuItem {
+    String getDescription();
+    double getPrice();
+}
+  ```
+
+  ##### Base Decorator - AddOnDecorator
+  ```java
+package cafe.decorators;
+
+import cafe.core.MenuItem;
+
+public abstract class AddOnDecorator implements MenuItem {
+    private MenuItem _item;
+
+    public AddOnDecorator(MenuItem item) {
+        this._item = item;
+    }
+
+    @Override
+    public String getDescription() {
+        return _item.getDescription();
+    }
+
+    @Override
+    public double getPrice() {
+        return _item.getPrice();
+    }
+}
+  ```
+
+  ##### One of the Concrete Decorators - AddOnDecorator
+  ```java
+package cafe.decorators;
+
+import cafe.core.MenuItem;
+
+public class CaramelSyrup extends AddOnDecorator {
+    public CaramelSyrup(MenuItem item) {
+        super(item);
+    }
+
+    @Override
+    public String getDescription() {
+        String base = super.getDescription();
+        if (base.contains(" with ")) {
+            return base + ", Caramel Syrup";
+        } else {
+            return base + " with Caramel Syrup";
+        }
+    }
+
+    @Override
+    public double getPrice() {
+        return super.getPrice() + 0.80;
+    }
+}
+  ```
+
+##### One of the Concrete Components - HotChocolate
+  ```java
+package cafe.drinks;
+
+import cafe.core.MenuItem;
+
+public class HotChocolate implements MenuItem {
+    @Override
+    public String getDescription() {
+        return "Hot Chocolate";
+    }
+
+    @Override
+    public double getPrice() {
+        return 3.20;
+    }
+}
+  ```
 ### 2. Composite
 
   #### _Description_
