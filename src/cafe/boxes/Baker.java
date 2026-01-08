@@ -13,14 +13,4 @@ public class Baker {
         this._builder.addDrink();
         this._builder.addPastry();
     }
-
-    public void makeCustomBox(int drinks, int pastries) {
-        this._builder.reset();
-        for (int i = 0; i < drinks; i++) {
-            this._builder.addDrink();
-        }
-        for (int i = 0; i < pastries; i++) {
-            this._builder.addPastry();
-        }
-    }
 }

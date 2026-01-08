@@ -9,7 +9,12 @@ public class CaramelSyrup extends AddOnDecorator {
 
     @Override
     public String getDescription() {
-        return super.getDescription() + ", Caramel Syrup";
+        String base = super.getDescription();
+        if (base.contains(" with ")) {
+            return base + ", Caramel Syrup";
+        } else {
+            return base + " with Caramel Syrup";
+        }
     }
 
     @Override

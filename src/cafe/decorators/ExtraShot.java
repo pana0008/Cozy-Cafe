@@ -9,7 +9,12 @@ public class ExtraShot extends AddOnDecorator{
 
     @Override
     public String getDescription() {
-        return super.getDescription() + ", Extra Espresso Shot";
+        String base = super.getDescription();
+        if (base.contains(" with ")) {
+            return base + ", Extra Espresso Shot";
+        } else {
+            return base + " with Extra Espresso Shot";
+        }
     }
 
     @Override

@@ -9,7 +9,12 @@ public class WhippedCream extends AddOnDecorator{
 
     @Override
     public String getDescription() {
-        return super.getDescription() + ", Whipped Cream";
+        String base = super.getDescription();
+        if (base.contains(" with ")) {
+            return base + ", Whipped Cream";
+        } else {
+            return base + " with Whipped Cream";
+        }
     }
 
     @Override

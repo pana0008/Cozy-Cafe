@@ -9,7 +9,12 @@ public class OatMilk extends AddOnDecorator{
 
     @Override
     public String getDescription() {
-        return super.getDescription() + ", Oat Milk";
+        String base = super.getDescription();
+        if (base.contains(" with ")) {
+            return base + ", Oat Milk";
+        } else {
+            return base + " with Oat Milk";
+        }
     }
 
     @Override
