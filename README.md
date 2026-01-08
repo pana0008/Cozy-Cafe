@@ -172,10 +172,35 @@ public class HealthyGiftBoxBuilder implements BoxBuilder{
 ---
   
 ### Structural Design Patterns
-- ### Decorator
-- ### Composite
+### 1. Decorator
+
+  #### _Description_
+
+  #### _Structure of the design pattern_
+<img width="6221" height="2629" alt="Decorator-CozyCafe" src="https://github.com/user-attachments/assets/e0d38ef6-9fcb-48ef-87b1-b9731528b5e0" />
+
+  #### _Implementation_
+### 2. Composite
+
+  #### _Description_
+
+  #### _Structure of the design pattern_
+
+  #### _Implementation_
 ### Behavioral Design Patterns
-- ### Strategy
-- ### State
+### 1. Strategy
+
+  #### _Description_
+
+  #### _Structure of the design pattern_
+
+  #### _Implementation_
+### 2. State
+
+  #### _Description_
+
+  #### _Structure of the design pattern_
+
+  #### _Implementation_
 
 
