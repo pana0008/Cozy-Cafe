@@ -24,6 +24,7 @@ This project was brewed by:
  - **Singleton**: `CafeMenu`
 
   #### _Structure of the design pattern_
+<img width="3004" height="1050" alt="Singleton-CozyCafe" src="https://github.com/user-attachments/assets/7c1fc849-0c5a-45c3-a158-4568e5050ddb" />
 
 ---
   
