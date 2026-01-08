@@ -275,23 +275,141 @@ public class HotChocolate implements MenuItem {
   #### _Description_
 
   #### _Structure of the design pattern_
-<img width="4838" height="1841" alt="Composite-CozyCafe" src="https://github.com/user-attachments/assets/7148365e-f5de-4a76-a1f7-e9933f764830" />
+  <img width="4838" height="1841" alt="Composite-CozyCafe" src="https://github.com/user-attachments/assets/2d7b46dc-daa4-468d-9c16-a64509db63c3" />
 
   #### _Implementation_
 ### Behavioral Design Patterns
 ### 1. Strategy
 
   #### _Description_
+The discount system in our application implements the Strategy design pattern. This allows the program to apply different discount calculations based on the customer type.
+
+The `ICalculateDiscount` interface defines the operation `getDiscountPrice()`, which calculates a  discount based on the total price and the number of items. The three concrete strategies - `NullDiscountCalculator`, `StudentDiscountCalculator` and `SeniorDiscountCalculator`, implement this interface to provide no discount, a 10% student discount or a 15% senior discount.
+
+The `Checkout` class acts as the Context. It holds a reference to an `ICalculateDiscount` strategy  and delegates the discount calculation to it. The strategy can be changed dynamically using the `setDiscountCalculator()` method.
+
+The `CheckoutState` class acts as the Client. It asks the customer for their discount type and selects the appropriate strategy, passing it to the `Checkout` context.
+
+This design allows adding new discount types in the future without changing the `Checkout` class. We can just implement a new strategy and pass it to the context.
+
+ - **Client**: `CheckoutState` - selects and sets the discount strategy
+ - **Strategy interface**: `ICalculateDiscount` - declares the discount calculation method
+ - **Concrete Strategy1**: `NullDiscountCalculator` - no discount applied 
+ - **Concrete Strategy2**: `StudentDiscountCalculator` - applies 10% discount
+ - **Concrete Strategy3**: `SeniorDiscountCalculator` - applies 15% discount  
+ - **Context**: `Checkout` - uses the selected strategy to calculate the final total  
 
   #### _Structure of the design pattern_
-<img width="4200" height="1391" alt="Strategy-CozyCafe" src="https://github.com/user-attachments/assets/9240f22e-614f-4c6a-a302-d185b18c6cfb" />
+  <img width="4575" height="1504" alt="Strategy-CozyCafe" src="https://github.com/user-attachments/assets/faeb7071-af44-469c-a83d-f36175d40262" />
 
   #### _Implementation_
+  ##### Strategy interface - ICalculateDiscount interface
+  ```java
+package cafe.discount;
+
+public interface ICalculateDiscount {
+    double getDiscountPrice(double totalPrice, int amountOfItems);
+}
+
+  ```
+  ##### Context - Checkout
+  ```java
+package cafe.core;
+
+import cafe.discount.ICalculateDiscount;
+import cafe.discount.NullDiscountCalculator;
+
+public class Checkout {
+    private ICalculateDiscount _discountCalculator;
+
+    public Checkout() {
+        _discountCalculator = new NullDiscountCalculator();
+    }
+
+    public void setDiscountCalculator(ICalculateDiscount discountCalc) {
+        this._discountCalculator = discountCalc;
+    }
+
+    public double calculateTotal(Basket basket) {
+        double priceToBePaid = basket.getTotalPrice();
+        int amountOfItems = basket.getTotalAmount();
+        double discountPrice = this._discountCalculator.getDiscountPrice(priceToBePaid, amountOfItems);
+        return priceToBePaid - discountPrice;
+    }
+}
+
+  ```
+
+  ##### Client - CheckoutState
+  ```java
+package cafe.states;
+
+import cafe.discount.*;
+import java.util.Scanner;
+
+public class CheckoutState implements OrderState {
+    private final Scanner sc = new Scanner(System.in);
+
+    @Override
+    public void proceed(Order order) {
+        applyDiscount(order);
+        printReceipt(order);
+        order.setState(new PaidState());
+    }
+
+    @Override
+    public String getStatus() {
+        return "Checkout";
+    }
+
+    private void applyDiscount(Order order) {
+        String discountType = askDiscountType();
+        switch (discountType) {
+            case "s", "student" -> order.getCheckout().setDiscountCalculator(new StudentDiscountCalculator());
+            case "r", "senior" -> order.getCheckout().setDiscountCalculator(new SeniorDiscountCalculator());
+            default -> order.getCheckout().setDiscountCalculator(new NullDiscountCalculator());
+        }
+    }
+
+    private String askDiscountType() {
+        System.out.println("\nAre you a student, senior, or none of these? (Enter s for student, r for senior, n for none):");
+        return sc.nextLine().toLowerCase();
+    }
+
+    private void printReceipt(Order order) {
+        double totalAfterDiscount = order.getCheckout().calculateTotal(order.getBasket());
+        System.out.println("\n=== RECEIPT ===\n");
+        if (order.getBasket().getTotalAmount() == 0) {
+            System.out.println("Your basket is empty.");
+        } else {
+            System.out.println("Amount of ordered items: " + order.getBasket().getTotalAmount());
+            System.out.println("Items ordered:\n" + order.getBasket().getItemsDescription());
+            System.out.println("***************************");
+            System.out.printf("TOTAL: $%.2f%n", totalAfterDiscount);
+        }
+    }
+}
+
+  ```
+
+  ##### One of the Concrete Strategies - StudentDiscountCalculator
+  ```java
+package cafe.discount;
+
+public class StudentDiscountCalculator implements ICalculateDiscount {
+    @Override
+    public double getDiscountPrice(double totalPrice, int amountOfItems) {
+        return totalPrice * 0.10;
+    }
+}
+
+  ```
 ### 2. State
 
   #### _Description_
 
   #### _Structure of the design pattern_
+<img width="6338" height="2066" alt="State-CozyCafe" src="https://github.com/user-attachments/assets/18e00314-f000-451b-ac5c-49acaac352a0" />
 
   #### _Implementation_
 
