@@ -33,9 +33,19 @@ public class OrderManager {
         System.out.println("\n--- PREVIEW ---");
         System.out.println(box.getDescription());
         System.out.println("Price: $" + String.format("%.2f", box.getPrice()));
-        System.out.print("Would you like to buy this box? (y/n): ");
-        return scanner.nextLine().equalsIgnoreCase("y") ? box : null;
+        while (true) {
+            System.out.print("Would you like to buy this box? (y/n): ");
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals("y")) {
+                return box;
+            } else if (input.equals("n")) {
+                return null;
+            } else {
+                System.out.println("Invalid input. Please enter 'y' or 'n'.");
+            }
+        }
     }
+
 
     public MenuItem selectItem() {
         String choice;

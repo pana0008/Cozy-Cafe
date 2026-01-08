@@ -5,7 +5,7 @@ import cafe.core.*;
 public class CreatedState implements OrderState {
     @Override
     public void proceed(Order order) {
-        System.out.println("What would you like to order?");
+        System.out.println("Let's start!");
         order.setState(new AddingItemsState());
     }
 

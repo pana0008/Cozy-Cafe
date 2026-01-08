@@ -34,12 +34,13 @@ public class CheckoutState implements OrderState {
 
     private void printReceipt(Order order) {
         double totalAfterDiscount = order.getCheckout().calculateTotal(order.getBasket());
-        System.out.println("\n=== RECEIPT ===");
+        System.out.println("\n=== RECEIPT ===\n");
         if (order.getBasket().getTotalAmount() == 0) {
             System.out.println("Your basket is empty.");
         } else {
             System.out.println("Amount of ordered items: " + order.getBasket().getTotalAmount());
             System.out.println("Items ordered:\n" + order.getBasket().getItemsDescription());
+            System.out.println("***************************");
             System.out.printf("TOTAL: $%.2f%n", totalAfterDiscount);
         }
     }

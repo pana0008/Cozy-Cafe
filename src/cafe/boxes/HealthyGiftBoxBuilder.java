@@ -1,5 +1,8 @@
 package cafe.boxes;
 
+import cafe.drinks.Tea;
+import cafe.pastries.BlueberryOatMuffin;
+
 public class HealthyGiftBoxBuilder implements BoxBuilder{
     private GiftBox box;
 
@@ -10,12 +13,12 @@ public class HealthyGiftBoxBuilder implements BoxBuilder{
 
     @Override
     public void addDrink() {
-        this.box.addItem("Iced green tea with lemon and honey");
+        this.box.addItem(new Tea());
     }
 
     @Override
     public void addPastry() {
-        this.box.addItem("Apple cinnamon oatmeal cookies");
+        this.box.addItem(new BlueberryOatMuffin());
     }
 
     @Override

@@ -1,5 +1,8 @@
 package cafe.boxes;
 
+import cafe.drinks.HotChocolate;
+import cafe.pastries.CinnamonRoll;
+
 public class DessertGiftBoxBuilder implements BoxBuilder {
     private GiftBox box;
 
@@ -10,12 +13,12 @@ public class DessertGiftBoxBuilder implements BoxBuilder {
 
     @Override
     public void addDrink() {
-        this.box.addItem("Hot chocolate mix with marshmallows");
+        this.box.addItem(new HotChocolate());
     }
 
     @Override
     public void addPastry() {
-        this.box.addItem("Salted caramel brownies");
+        this.box.addItem(new CinnamonRoll());
     }
 
     @Override

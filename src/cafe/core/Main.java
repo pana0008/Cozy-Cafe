@@ -12,6 +12,12 @@ public class Main {
         Order order = new Order(orderManager, basket, checkout);
 
         System.out.println("=== WELCOME TO THE COZY CAFE! ===");
+        System.out.println("       ( (");
+        System.out.println("        ) )");
+        System.out.println("      ........  What would");
+        System.out.println("      |      |]   you like");
+        System.out.println("      \\      /   to order?");
+        System.out.println("       `----'");
 
         while (!order.getState().getStatus().equals("Paid")) {
             order.proceed();

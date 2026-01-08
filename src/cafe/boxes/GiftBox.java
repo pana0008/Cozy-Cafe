@@ -6,26 +6,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GiftBox implements MenuItem {
-    private List<String> items = new ArrayList<>();
+    private List<MenuItem> items = new ArrayList<>();
 
-    public void addItem(String item) {
+    public void addItem(MenuItem item) {
         items.add(item);
     }
 
     @Override
     public String getDescription() {
         StringBuilder sb = new StringBuilder("GiftBox:\n");
-        for (String item : items) {
-            sb.append(" - ").append(item).append("\n");
+
+        for (MenuItem item : items) {
+            sb.append(" - ").append(item.getDescription()).append("\n");
         }
-        if (!sb.isEmpty()) {
+
+        if (!items.isEmpty()) {
             sb.setLength(sb.length() - 1);
         }
+
         return sb.toString();
     }
 
     @Override
     public double getPrice() {
-        return 20.00;
+        double total = 0;
+        for (MenuItem item : items) {
+            total += item.getPrice();
+        }
+        return total;
     }
 }
