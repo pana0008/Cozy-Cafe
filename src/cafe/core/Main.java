@@ -1,49 +1,63 @@
 package cafe.core;
 
-import cafe.core.ConsoleReader;
-
-import cafe.decorators.CaramelSyrup;
-import cafe.decorators.ExtraShot;
-import cafe.decorators.OatMilk;
-import cafe.decorators.WhippedCream;
-import cafe.drinks.Latte;
+import java.util.*;
+import cafe.core.OrderManager;
+import cafe.core.MenuItem;
+import cafe.boxes.GiftBox;
 
 public class Main {
     public static void main(String[] args) {
+        OrderManager orderManager = new OrderManager();
+        List<String> cart = new ArrayList<>();
+        Scanner sc = new Scanner(System.in);
 
-        MenuItem latte = new Latte();
-        ConsoleReader reader = new ConsoleReader();
+        double total = 0;
 
-        System.out.println("Welcome to the cozy cafe!");
-        System.out.println("You ordered a Latte.");
+        System.out.println("=== WELCOME TO THE COZY CAFE! ===");
 
-        System.out.print("Add Oat Milk? (y/n): ");
-        String input = reader.readLine();
-        if (input.equalsIgnoreCase("y")) {
-            latte = new OatMilk(latte);
+        mainLoop:
+        while (true) {
+            System.out.println("\n--- SELECT AN OPTION ---");
+            System.out.println("1) Order Drink or Pastry");
+            System.out.println("2) Order Gift Box");
+            System.out.println("3) Checkout and Pay");
+            System.out.print("Choice: ");
+            String choice = sc.nextLine();
+
+            switch (choice) {
+                case "1" -> {
+                    MenuItem item = orderManager.selectItem();
+                    if (item != null) {
+                        cart.add(item.getDescription() + " - $" + String.format("%.2f", item.getPrice()));
+                        total += item.getPrice();
+                        System.out.println("Added to cart: " + item.getDescription());
+                    }
+                }
+                case "2" -> {
+                    GiftBox box = orderManager.buildGiftBox();
+                    if (box != null) {
+                        cart.add("Gift Box - $" + String.format("%.2f", box.getPrice()));
+                        total += box.getPrice();
+                        System.out.println("Added Gift Box to cart.");
+                    }
+                }
+                case "3" -> {
+                    break mainLoop;
+                }
+                default -> System.out.println("Invalid option. Please enter 1, 2, or 3.");
+            }
         }
 
-        System.out.print("Add Vanilla Syrup? (y/n): ");
-        input = reader.readLine();
-        if (input.equalsIgnoreCase("y")) {
-            latte = new CaramelSyrup(latte);
+        System.out.println("\n=== RECEIPT ===");
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty.");
+        } else {
+            for (String item : cart) {
+                System.out.println(item);
+            }
+            System.out.printf("TOTAL: $%.2f%n", total);
         }
 
-        System.out.print("Add Extra Shot? (y/n): ");
-        input = reader.readLine();
-        if (input.equalsIgnoreCase("y")) {
-            latte = new ExtraShot(latte);
-        }
-
-        System.out.print("Add Whipped Cream? (y/n): ");
-        input = reader.readLine();
-        if (input.equalsIgnoreCase("y")) {
-            latte = new WhippedCream(latte);
-        }
-
-        System.out.println("Your final drink: " + latte.getDescription());
-        System.out.println("Total price: $" + latte.getPrice());
-
-        reader.readLine();
+        System.out.println("\nThank you for visiting the Cozy Cafe!");
     }
 }
