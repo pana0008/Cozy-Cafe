@@ -275,6 +275,7 @@ public class HotChocolate implements MenuItem {
   #### _Description_
 
   #### _Structure of the design pattern_
+<img width="4838" height="1841" alt="Composite-CozyCafe" src="https://github.com/user-attachments/assets/7148365e-f5de-4a76-a1f7-e9933f764830" />
 
   #### _Implementation_
 ### Behavioral Design Patterns
@@ -283,6 +284,7 @@ public class HotChocolate implements MenuItem {
   #### _Description_
 
   #### _Structure of the design pattern_
+<img width="4200" height="1391" alt="Strategy-CozyCafe" src="https://github.com/user-attachments/assets/9240f22e-614f-4c6a-a302-d185b18c6cfb" />
 
   #### _Implementation_
 ### 2. State
