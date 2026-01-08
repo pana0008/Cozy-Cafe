@@ -1,17 +1,13 @@
 package cafe.core;
 
-import java.util.*;
-import cafe.core.OrderManager;
-import cafe.core.MenuItem;
-import cafe.boxes.GiftBox;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        OrderManager orderManager = new OrderManager();
-        List<String> cart = new ArrayList<>();
-        Scanner sc = new Scanner(System.in);
 
-        double total = 0;
+        OrderManager orderManager = new OrderManager();
+        Basket basket = new Basket();
+        Scanner sc = new Scanner(System.in);
 
         System.out.println("=== WELCOME TO THE COZY CAFE! ===");
 
@@ -22,42 +18,46 @@ public class Main {
             System.out.println("2) Order Gift Box");
             System.out.println("3) Checkout and Pay");
             System.out.print("Choice: ");
+
             String choice = sc.nextLine();
 
             switch (choice) {
+
                 case "1" -> {
                     MenuItem item = orderManager.selectItem();
                     if (item != null) {
-                        cart.add(item.getDescription() + " - $" + String.format("%.2f", item.getPrice()));
-                        total += item.getPrice();
-                        System.out.println("Added to cart: " + item.getDescription());
+                        basket.addProduct(item);
+                        System.out.println("Added " + item.getDescription() + " to basket.");
                     }
                 }
+
                 case "2" -> {
-                    GiftBox box = orderManager.buildGiftBox();
+                    MenuItem box = orderManager.buildGiftBox();
                     if (box != null) {
-                        cart.add("Gift Box - $" + String.format("%.2f", box.getPrice()));
-                        total += box.getPrice();
-                        System.out.println("Added Gift Box to cart.");
+                        basket.addProduct(box);
+                        System.out.println("Added Gift Box to basket.");
                     }
                 }
+
                 case "3" -> {
                     break mainLoop;
                 }
+
                 default -> System.out.println("Invalid option. Please enter 1, 2, or 3.");
             }
         }
 
         System.out.println("\n=== RECEIPT ===");
-        if (cart.isEmpty()) {
-            System.out.println("Your cart is empty.");
+
+        if (basket.getTotalAmount() == 0) {
+            System.out.println("Your basket is empty.");
         } else {
-            for (String item : cart) {
-                System.out.println(item);
-            }
-            System.out.printf("TOTAL: $%.2f%n", total);
+            System.out.println("Amount of ordered items: " + basket.getTotalAmount());
+            System.out.println("Items ordered:\n" + basket.getItemsDescription());
+            System.out.printf("TOTAL: $%.2f%n", basket.getTotalPrice());
         }
 
         System.out.println("\nThank you for visiting the Cozy Cafe!");
+        sc.close();
     }
 }
