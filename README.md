@@ -360,11 +360,7 @@ public class Cappuccino implements MenuItem {
   #### _Description_
 The discount system in our application implements the Strategy design pattern. This allows the program to apply different discount calculations based on the customer type.
 
-The `ICalculateDiscount` interface defines the operation `getDiscountPrice()`, which calculates a  discount based on the total price and the number of items. The three concrete strategies - `NullDiscountCalculator`, `StudentDiscountCalculator` and `SeniorDiscountCalculator`, implement this interface to provide no discount, a 10% student discount or a 15% senior discount.
-
-The `Checkout` class acts as the Context. It holds a reference to an `ICalculateDiscount` strategy  and delegates the discount calculation to it. The strategy can be changed dynamically using the `setDiscountCalculator()` method.
-
-The `CheckoutState` class acts as the Client. It asks the customer for their discount type and selects the appropriate strategy, passing it to the `Checkout` context.
+The `ICalculateDiscount` interface defines the operation `getDiscountPrice()`, which calculates a  discount based on the total price and the number of items. The three concrete strategies - `NullDiscountCalculator`, `StudentDiscountCalculator` and `SeniorDiscountCalculator`, implement this interface to provide no discount, a 10% student discount or a 15% senior discount. The `Checkout` class acts as the Context. It holds a reference to an `ICalculateDiscount` strategy  and delegates the discount calculation to it. The strategy can be changed dynamically using the `setDiscountCalculator()` method. The `CheckoutState` class acts as the Client. It asks the customer for their discount type and selects the appropriate strategy, passing it to the `Checkout` context.
 
 This design allows adding new discount types in the future without changing the `Checkout` class. We can just implement a new strategy and pass it to the context.
 
@@ -483,10 +479,174 @@ public class StudentDiscountCalculator implements ICalculateDiscount {
 ### 2. State
 
   #### _Description_
+The order process in our application implements the State design pattern. This pattern allows an object to change its behaviour when its internal state changes. In our case, the behaviour of an order depends on its current state in the ordering process.
+
+The `OrderState` interface defines the common methods that all order states must have: proceed() and getStatus(). Each concrete state represents one step of the order process and decides what happens during that step. The `Order` class acts as the Context. It keeps track of the current state of the order and calls the `proceed()` method on that state. The `Order` class does not need to know which state is active - it simply delegates the work to the current state. The concrete states `CreatedState`, `AddingItemsState`, `CheckoutState` and `PaidState` each implement the `OrderState` interface. Each state controls the behaviour of the order for that step and decides when to move the order to the next state. The `Main` class acts as the Client. It creates the `Order` object and repeatedly calls `proceed()` until the order reaches the final `Paid` state.
+
+The design makes the order process to change and extend. New states can be added without changing the existing order logic or the client code.
+
+ **Client**: `CheckoutState` - creates the order and triggers state transitions
+ - **State interface**: `OrderState` - declares the common state operations
+ - **Concrete State1**: `CreatedState` - starts the order
+ - **Concrete State2**: `AddingItemsState` - allows items and gift boxes to be added
+ - **Concrete State3**: `CheckoutState` - applies discounts and prints the receipt 
+ - **Concrete State4**: `PaidState` - final state that completes the order  
+ - **Context**: `Order` - maintains the current state and delegates behaviour to it  
 
   #### _Structure of the design pattern_
 <img width="6338" height="2066" alt="State-CozyCafe" src="https://github.com/user-attachments/assets/18e00314-f000-451b-ac5c-49acaac352a0" />
 
   #### _Implementation_
+  ##### State interface - OrderState 
+  ```java
+  package cafe.states;
+
+public interface OrderState {
+    void proceed(Order order);
+    String getStatus();
+}
+  ```
+  ##### Context - Order
+  ```java
+package cafe.states;
+
+import cafe.core.*;
+
+public class Order {
+    private OrderState _state;
+    private Basket _basket;
+    private OrderManager _manager;
+    private Checkout _checkout;
+
+    public Order(OrderManager manager, Basket basket, Checkout checkout) {
+        this._manager = manager;
+        this._basket = basket;
+        this._checkout = checkout;
+        this._state = new CreatedState();
+    }
+
+    public void setState(OrderState state) {
+        this._state = state;
+    }
+
+    public OrderState getState() {
+        return this._state;
+    }
+
+    public Basket getBasket() {
+        return this._basket;
+    }
+
+    public OrderManager getManager() {
+        return this._manager;
+    }
+
+    public Checkout getCheckout() {
+        return this._checkout;
+    }
+
+    public void proceed() {
+        this._state.proceed(this);
+    }
+
+    public String getStatus() {
+        return this._state.getStatus();
+    }
+}
+
+  ```
+  ##### Client - Main
+  ```java
+package cafe.core;
+
+import cafe.discount.*;
+import cafe.states.Order;
 
 
+public class Main {
+    public static void main(String[] args) {
+        OrderManager orderManager = new OrderManager();
+        Basket basket = new Basket();
+        Checkout checkout = new Checkout();
+        Order order = new Order(orderManager, basket, checkout);
+
+        System.out.println("=== WELCOME TO THE COZY CAFE! ===");
+        System.out.println("       ( (");
+        System.out.println("        ) )");
+        System.out.println("      ........  What would");
+        System.out.println("      |      |]   you like");
+        System.out.println("      \\      /   to order?");
+        System.out.println("       `----'");
+
+        while (!order.getState().getStatus().equals("Paid")) {
+            order.proceed();
+        }
+    }
+}
+  ```
+  ##### One of the Concrete States - AddingItemsState
+  ```java
+package cafe.states;
+
+import cafe.core.*;
+import java.util.Scanner;
+
+public class AddingItemsState implements OrderState {
+    private final Scanner sc = new Scanner(System.in);
+
+    @Override
+    public void proceed(Order order) {
+        OrderManager manager = order.getManager();
+
+        while (true) {
+            displayMenu();
+            String choice = sc.nextLine();
+            if (handleChoice(choice, order, manager)) {
+                return;
+            }
+        }
+    }
+
+    @Override
+    public String getStatus() {
+        return "Adding Items";
+    }
+
+    private void displayMenu() {
+        System.out.println("\n--- SELECT AN OPTION ---");
+        System.out.println("1) Order Drink or Pastry");
+        System.out.println("2) Order Gift Box");
+        System.out.println("3) Checkout and Pay");
+        System.out.print("Choice: ");
+    }
+
+    private boolean handleChoice(String choice, Order order, OrderManager manager) {
+        switch (choice) {
+            case "1" -> addDrinkOrPastry(order, manager);
+            case "2" -> addGiftBox(order, manager);
+            case "3" -> {
+                order.setState(new CheckoutState());
+                return true;
+            }
+            default -> System.out.println("Invalid option. Please enter 1, 2, or 3.");
+        }
+        return false;
+    }
+
+    private void addDrinkOrPastry(Order order, OrderManager manager) {
+        MenuItem item = manager.selectItem();
+        if (item != null) {
+            order.getBasket().addProduct(item);
+            System.out.println("Added " + item.getDescription() + " to basket.");
+        }
+    }
+
+    private void addGiftBox(Order order, OrderManager manager) {
+        MenuItem box = manager.buildGiftBox();
+        if (box != null) {
+            order.getBasket().addProduct(box);
+            System.out.println("Added Gift Box to basket.");
+        }
+    }
+}
+  ```
