@@ -2,7 +2,7 @@
 This is a ☕︎ Java console-based application that simulates a cafe ordering system. </br>
 The user takes on the role of a customer. They can browse the menu, choose drinks and pastries, customize the drinks with add-ons, select gift boxes and complete an order through a simple text-based interface.
 
-<img width="924" height="645" alt="cozy-cafe-menu" src="https://github.com/user-attachments/assets/c1b6f376-ca7d-4a41-ac6f-58ff0fc4c8e8" />
+<img width="1003" height="667" alt="cozy-cafe-menu" src="https://github.com/user-attachments/assets/51bef6db-05c9-42e1-8914-5e2d3da7edea" />
 
 ## View the GitHub Repository here!
 
@@ -365,7 +365,7 @@ public class Cappuccino implements MenuItem {
 
   ---
   
-### Behavioral Design Patterns
+### _Behavioral Design Patterns_
 ### 1. Strategy
 
   #### _Description_
