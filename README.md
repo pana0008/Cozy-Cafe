@@ -14,6 +14,16 @@ This project was brewed by:
 - **Svetlozara Kirova** - https://github.com/SvKirova
 - **Gabriela Panayotova** - https://github.com/pana0008
 
+### How we worked together as a team
+
+At the beginning of the project, we reviewed the assignment requirements and discussed how to implement an application that uses multiple design patterns. We agreed to build a console-based cafe ordering system (as we both really love to go to cafes) that clearly demonstrates the use of several patterns in a practical context.  We worked together to decide which design patterns to apply and where they would fit best in the application.
+
+Next, we designed the class diagrams together. We first drew the initial diagrams on paper, then discussed them and improved them to make the structure as clear as possible and to ensure that each design pattern was used correctly.
+
+During the implementation phase, we both contributed to the codebase. Each of us made 3 design pattern, as we planned to have 6 in total. As the project progressed, we made small changes to the original design where necessary, while keeping the overall structure and design patterns consistent with the initial plan.
+
+Finally, we worked together on testing the application, fixing issues, and writing the documentation. This collaboration ensured that the final application met the assignment requirements and demonstrated the correct use of multiple design patterns.
+
 ## Design Patterns implemented in this project
 ### _Creational Design Patterns_
 
